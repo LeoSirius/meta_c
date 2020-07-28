@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "utils.h"
 
-void test1()
+void test_is_equal_str()
 {
     bool is_passed = true;
     char str1[] = "123";
@@ -28,6 +28,6 @@ void test1()
 
 int main()
 {
-    test1();
+    test_is_equal_str();
     return 0;
 }
