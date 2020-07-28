@@ -1,12 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 /*
  * stack implemented in array
  */
 
 #ifndef STACK_ARRAY_H
 #define STACK_ARRAY_H
+
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef int element_type;
 
@@ -39,7 +39,7 @@ stack new_stack(int size)
         printf("malloc error\n");
         return NULL;
     }
-    stk->array = malloc(sizeof(element_type) * size);
+    stk->array = (element_type*)malloc(sizeof(element_type) * size);
     if (stk->array == NULL) {
         printf("This is %s() from %s, line %d\n", __FUNCTION__, __FILE__, __LINE__);
         printf("malloc error\n");
