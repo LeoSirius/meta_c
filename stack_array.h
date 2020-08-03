@@ -7,27 +7,25 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef int element_type;
+#include "meta_c/darray.h"
 
 struct stack_record {
-    int capacity;
     int top_of_stack;
-    element_type *array;
+    darray array;
 };
 
 typedef struct stack_record *stack;
 
-stack new_stack(int size);
-int is_empty(stack stk);
-int is_full(stack stk);
-void del_stack(stack stk);
-void make_empty(stack stk);
-void push(stack stk, element_type x);
-void pop(stack stk);
-element_type top(stack stk);
+stack stack_new(int size);
+void stack_del(stack stk);
+int stack_is_empty(stack stk);
+int stack_is_full(stack stk);
+void stack_make_empty(stack stk);
+// void push(stack stk, element_type x);
+// void pop(stack stk);
+// element_type top(stack stk);
 
-void expand(stack stk);
+// void stack_expand(stack stk);
 
 
 stack new_stack(int size)
@@ -35,78 +33,34 @@ stack new_stack(int size)
     stack stk;
     stk = (stack)malloc(sizeof(struct stack_record));
     if (stk == NULL) {
-        printf("This is %s() from %s, line %d\n", __FUNCTION__, __FILE__, __LINE__);
-        printf("malloc error\n");
+        perror("Error: ");
         return NULL;
     }
-    stk->array = (element_type*)malloc(sizeof(element_type) * size);
-    if (stk->array == NULL) {
-        printf("This is %s() from %s, line %d\n", __FUNCTION__, __FILE__, __LINE__);
-        printf("malloc error\n");
-        return NULL;
-    }
-
-    stk->capacity = size;
-    make_empty(stk);
+    stk->array = darray_new();
+    stack_make_empty(stk);
 
     return stk;
 }
 
-void make_empty(stack stk)
+void stack_make_empty(stack stk)
 {
-    if (stk == NULL) return;
+    if (!stk)
+        return;
     stk->top_of_stack = -1;
 }
 
 void del_stack(stack stk)
 {
     if (stk == NULL) return;
-    free(stk->array);
+    darray_del(&(stk->array));
     free(stk);
 }
 
-void push(stack stk, element_type x)
+void stack_push(stack stk, void *x)
 {
-    if (is_full(stk)) {
-        expand(stk);
-    }
-
-    stk->array[++stk->top_of_stack] = x;
+    darray_append(stk->array, x);
 }
 
-element_type top(stack stk)
-{
-    if (is_empty(stk)) {
-        // todo: log info
-        return 0;  // return a value to avoid warning
-    }
-    return stk->array[stk->top_of_stack];
-}
-
-void pop(stack stk)
-{
-    if (is_empty(stk)) {
-        // todo : log
-        return 0;
-    }
-    --stk->top_of_stack;
-}
-
-int is_full(stack stk)
-{
-    return stk->top_of_stack == stk->capacity - 1;
-}
-
-int is_empty(stack stk)
-{
-    return stk->top_of_stack == -1;
-}
-
-void expand(stack stk)
-{
-    stk->capacity *= 2;
-    realloc(stk->array, stk->capacity);
-}
 
 
 

@@ -20,14 +20,14 @@ typedef struct darray_record* darray;
 #define INIT_CAPACITY (100)
 #define INCREMENT_FACTOR (2)
 
-darray new_darray();
-void del_darray(darray *da);
-bool is_empty(darray da);
-bool is_full(darray da);
-void expand(darray da);
-void append(darray da, void *x);
+darray darray_new();
+void darray_del(darray *da);
+bool darray_is_empty(darray da);
+bool darray_is_full(darray da);
+void darray_expand(darray da);
+void darray_append(darray da, void *x);
 
-darray new_darray(int cap)
+darray darray_new(int cap)
 {
     darray da = (darray)malloc(sizeof(struct darray_record));
     if (da == NULL) {
@@ -44,7 +44,7 @@ darray new_darray(int cap)
     return da;
 }
 
-void del_darray(darray *da)
+void darray_del(darray *da)
 {
     if (*da == NULL)
         return;
@@ -53,26 +53,40 @@ void del_darray(darray *da)
     *da = NULL;
 }
 
-bool is_full(darray da)
+bool darray_is_full(darray da)
 {
     return da->size == da->capacity;
 }
 
-bool is_emoty(darray da)
+bool darray_is_empty(darray da)
 {
     return da->size == 0;
 }
 
-void expand(darray da)
+void darray_expand(darray da)
 {
     da->capacity *= 2;
     da->data = realloc(da->data, sizeof(void*) * da->capacity);
 }
 
-void append(darray da, void *p)
+void darray_append(darray da, void *p)
 {
-    if (is_full(da)) expand(da);
+    if (darray_is_full(da)) darray_expand(da);
     da->data[da->size++] = p;
+}
+
+void* darray_back(darray da)
+{
+    if (darray_is_empty(da))
+        return NULL;
+    return da->data[da->size-1];
+}
+
+void* darray_pop(darray da)
+{
+    if (darray_is_empty(da))
+        return NULL;
+    return da->data[(da->size)--];
 }
 
 
