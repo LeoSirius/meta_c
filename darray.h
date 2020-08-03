@@ -26,6 +26,7 @@ bool darray_is_empty(darray da);
 bool darray_is_full(darray da);
 void darray_expand(darray da);
 void darray_append(darray da, void *x);
+int darray_size(darray da);
 
 darray darray_new(int cap)
 {
@@ -87,6 +88,11 @@ void* darray_pop(darray da)
     if (darray_is_empty(da))
         return NULL;
     return da->data[(da->size)--];
+}
+
+int darray_size(darray da)
+{
+    return da->size;
 }
 
 
