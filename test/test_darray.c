@@ -7,7 +7,7 @@
 void test1()
 {
     bool is_pass = true;
-    darray da = darray_new(2);
+    darray *da = darray_new(2);
     int v1 = 1, v2 = 2, v3 = 3;
     darray_append(da, &v1);
     darray_append(da, &v2);
@@ -34,11 +34,8 @@ void test1()
         printf("size = %d, cap = %d\n", da->size, da->capacity);
         is_pass = false;
     }
-    darray_del(&da);
-    if (da != NULL) {
-        printf("da != NULL\n");
-        is_pass = false;
-    }
+    darray_del(da);
+
 
     if (is_pass)
         printf("test1 success.\n");
@@ -49,7 +46,7 @@ void test1()
 void test2()
 {
     bool is_pass = true;
-    darray da = darray_new(3);
+    darray *da = darray_new(3);
     char *strs[] = {"I", "am", "Leo", "Sirius"};
     darray_append(da, strs[0]);
     darray_append(da, strs[1]);
@@ -77,11 +74,7 @@ void test2()
         printf("size = %d, cap = %d\n", da->size, da->capacity);
         is_pass = false;
     }
-    darray_del(&da);
-    if (da != NULL) {
-        printf("da != NULL\n");
-        is_pass = false;
-    }
+    darray_del(da);
 
     if (is_pass)
         printf("test2 success.\n");
@@ -92,7 +85,7 @@ void test2()
 void test3()
 {
     bool is_pass = true;
-    darray da = darray_new(2);
+    darray *da = darray_new(2);
     int v1 = 1, v2 = 2;
     darray_append(da, &v1);
     darray_append(da, &v2);
@@ -106,6 +99,7 @@ void test3()
     int *back2 = darray_back(da);
     if (back2 != NULL)
         is_pass = false;
+    darray_del(da);
 
     if (is_pass)
         printf("test3 success.\n");

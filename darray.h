@@ -9,90 +9,94 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-struct darray_record {
+typedef struct _darray {
     int capacity;
     int size;
     void **data;
-};
+}darray;
 
-typedef struct darray_record* darray;
 
 #define INIT_CAPACITY (100)
 #define INCREMENT_FACTOR (2)
 
-darray darray_new();
-void darray_del(darray *da);
-bool darray_is_empty(darray da);
-bool darray_is_full(darray da);
-void darray_expand(darray da);
-void darray_append(darray da, void *x);
-int darray_size(darray da);
+darray* darray_new();
+void darray_del(darray *self);
+bool darray_is_empty(darray *self);
+void darray_expand(darray *self);
+void darray_append(darray *self, void *x);
+int darray_size(darray *self);
 
-darray darray_new(int cap)
+bool _darray_is_full(darray *self);  /* never full to user */
+
+/*
+ * cap 0 means default capacity
+ */
+darray* darray_new(int cap)
 {
-    darray da = (darray)malloc(sizeof(struct darray_record));
-    if (da == NULL) {
+    darray *self = (darray*)malloc(sizeof(darray));
+    if (self == NULL) {
         perror("Error: ");
         return NULL;
     }
-    da->capacity = cap ? cap : INIT_CAPACITY;
-    da->data = (void**)calloc(INIT_CAPACITY, sizeof(void*));
-    if (da->data == NULL) {
+    self->capacity = cap ? cap : INIT_CAPACITY;
+    self->data = (void**)calloc(INIT_CAPACITY, sizeof(void*));
+    if (self->data == NULL) {
         perror("Error: ");
         return NULL;
     }
-    da->size = 0;
-    return da;
+    self->size = 0;
+    return self;
 }
 
-void darray_del(darray *da)
+void darray_del(darray *self)
 {
-    if (*da == NULL)
+    if (self == NULL)
         return;
-    free((*da)->data);
-    free(*da);
-    *da = NULL;
+    free(self->data);
+    free(self);
+    self = NULL;
 }
 
-bool darray_is_full(darray da)
+bool _darray_is_full(darray *self)
 {
-    return da->size == da->capacity;
+    return self->size == self->capacity;
 }
 
-bool darray_is_empty(darray da)
+bool darray_is_empty(darray *self)
 {
-    return da->size == 0;
+    return self->size == 0;
 }
 
-void darray_expand(darray da)
+void darray_expand(darray *self)
 {
-    da->capacity *= 2;
-    da->data = realloc(da->data, sizeof(void*) * da->capacity);
+    self->capacity *= 2;
+    self->data = realloc(self->data, sizeof(void*) * self->capacity);
 }
 
-void darray_append(darray da, void *p)
+void darray_append(darray *self, void *p_target)
 {
-    if (darray_is_full(da)) darray_expand(da);
-    da->data[da->size++] = p;
+    if (_darray_is_full(self))
+        darray_expand(self);
+    self->data[self->size++] = p_target;
 }
 
-void* darray_back(darray da)
+void* darray_back(darray *self)
 {
-    if (darray_is_empty(da))
+    if (darray_is_empty(self))
         return NULL;
-    return da->data[da->size-1];
+    return self->data[self->size-1];
 }
 
-void* darray_pop(darray da)
+void* darray_pop(darray *self)
 {
-    if (darray_is_empty(da))
+    if (darray_is_empty(self))
         return NULL;
-    return da->data[(da->size)--];
+    return self->data[--(self->size)];
 }
 
-int darray_size(darray da)
+int darray_size(darray *self)
 {
-    return da->size;
+    return self->size;
 }
 
 

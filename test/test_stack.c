@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "stack_array.h"
+#include "stack.h"
 #include "utils.h"
 
 void test1()
 {
     bool is_pass = true;
-    stack stk = stack_new();
+    stack *stk = stack_new();
+    if(!stack_is_empty(stk)) {
+        printf("!stack_is_empty(stk)");
+        is_pass = false;
+    }
     int v1 = 1, v2 = 2, v3 = 3;
     stack_push(stk, &v1);
     stack_push(stk, &v2);
@@ -26,9 +30,7 @@ void test1()
         printf("*top1 = %d, *top2 = %d, *top3 = %d, top4 = %p", *top1, *top2, *top3, top4);
     }
 
-    stack_del(&stk);
-    if (stk != NULL)
-        is_pass = false;
+    stack_del(stk);
 
     if (is_pass)
         printf("test1 success.\n");
@@ -40,7 +42,7 @@ void test1()
 void test2()
 {
     bool is_pass = true;
-    stack stk = stack_new();
+    stack *stk = stack_new();
     char *strs[] = {"I", "am", "Leo", "Sirius"};
     stack_push(stk, strs[0]);
     stack_push(stk, strs[1]);
@@ -72,16 +74,42 @@ void test2()
         is_pass = false;
     }
 
+    stack_del(stk);
+
     if (is_pass)
         printf("test2 success.\n");
     else
         printf("test2 failed\n");
+}
 
+void test3()
+{
+    bool is_pass = true;
+    stack *stk = stack_new();
+    const int LIMIT = 10000;
+    int *arr = (int*)malloc(sizeof(int) * LIMIT);
+    for (int i = 0; i < LIMIT; i++) {
+        arr[i] = i;
+        stack_push(stk, &(arr[i]));
+    }
+    for (int i = LIMIT - 1; 0 <= i; i--) {
+        int *res = stack_pop(stk);
+
+        if (*res != i) {
+            is_pass = false;
+        }
+    }
+
+    if (is_pass)
+        printf("test3 success.\n");
+    else
+        printf("test3 failed\n");
 }
 
 int main()
 {
     test1();
     test2();
+    test3();
     return 0;
 }
