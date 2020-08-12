@@ -128,6 +128,24 @@ void test4()
         }
     }
 
+    darray_delete(da, 3); // 3 2 5 4 2
+    int expected2[] = {3,2,5,4,2};
+    for (int i = 0; i < da->size; i++) {
+        if (*(int*)da->data[i] != expected2[i]) {
+            is_pass = false;
+            printf("da->data[i] = %d, expected[i] = %d, i = %d\n", *(int*)da->data[i], expected2[i], i);
+        }
+    }
+
+    darray_delete(da, 0);  // 2 5 4 2
+    int expected3[] = {2, 5, 4, 2};
+    for (int i = 0; i < da->size; i++) {
+        if (*(int*)da->data[i] != expected3[i]) {
+            is_pass = false;
+            printf("da->data[i] = %d, expected[i] = %d, i = %d\n", *(int*)da->data[i], expected3[i], i);
+        }
+    }
+
     if (is_pass)
         printf("test4 success.\n");
     else
@@ -144,7 +162,7 @@ int main()
     // test pop extreme case
     test3();
 
-    // test insert
+    // test insert and delete
     test4();
     return 0;
 }

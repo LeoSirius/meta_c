@@ -19,15 +19,19 @@ typedef struct _darray {
 #define INIT_CAPACITY (100)
 #define INCREMENT_FACTOR (2)
 
-darray* darray_new();
-void darray_del(darray *self);
-bool darray_is_empty(darray *self);
-void darray_expand(darray *self);
-void darray_append(darray *self, void *x);
-void darray_insert(darray *self, void *x, int pos);
-int darray_size(darray *self);
+darray*     darray_new      ();
+void        darray_del      (darray* self);
 
-bool _darray_is_full(darray *self);  /* never full to user */
+void        darray_expand   (darray* self);
+void        darray_append   (darray* self, void* x);
+
+void        darray_insert   (darray* self, void* x, int pos);
+void        darray_delete   (darray* self, int pos);
+
+int         darray_size     (darray* self);
+bool        darray_is_empty (darray* self);
+
+bool        _darray_is_full (darray* self);  /* never full to user */
 
 /*
  * cap 0 means default capacity
@@ -114,6 +118,18 @@ void darray_insert(darray *self, void *x, int pos)
     }
     (self->size)++;
     self->data[pos] = x;
+}
+
+void darray_delete(darray *self, int pos)
+{
+    if (pos < 0 || self->size <= pos) {
+        printf("darray_insert pos %d invalid.\n", pos);
+        printf("self->size = %d\n", self->size);
+        return;
+    }
+    for (int i = pos; i < self->size - 1; i++)
+        self->data[i] = self->data[i+1];
+    (self->size)--;
 }
 
 
