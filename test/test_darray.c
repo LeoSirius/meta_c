@@ -107,13 +107,44 @@ void test3()
         printf("test3 failed\n");
 }
 
+void test4()
+{
+    bool is_pass = true;
+    darray *da = darray_new(0);
+    int v1 = 1, v2 = 2, v3 = 3, v4 = 4, v5 = 5;
+    darray_insert(da, &(v1), 0);  // 1
+    darray_insert(da, &(v2), 0);  // 2 1
+    darray_insert(da, &(v5), 1);  // 2 5 1
+    darray_insert(da, &(v2), 3);  // 2 5 1 2
+    darray_insert(da, &(v4), 3);  // 2 5 1 4 2
+    darray_insert(da, &(v3), 0);  // 3 2 5 1 4 2
+
+    int expected[] = {3,2,5,1,4,2};
+
+    for (int i = 0; i < da->size; i++) {
+        if (*(int*)da->data[i] != expected[i]) {
+            is_pass = false;
+            printf("da->data[i] = %d, expected[i] = %d, i = %d\n", *(int*)da->data[i], expected[i], i);
+        }
+    }
+
+    if (is_pass)
+        printf("test4 success.\n");
+    else
+        printf("test4 failed\n");
+}
+
 int main()
 {
     // 1 and 2 are general tests
     test1();
     test2();
 
+
     // test pop extreme case
     test3();
+
+    // test insert
+    test4();
     return 0;
 }

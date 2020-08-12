@@ -24,6 +24,7 @@ void darray_del(darray *self);
 bool darray_is_empty(darray *self);
 void darray_expand(darray *self);
 void darray_append(darray *self, void *x);
+void darray_insert(darray *self, void *x, int pos);
 int darray_size(darray *self);
 
 bool _darray_is_full(darray *self);  /* never full to user */
@@ -97,6 +98,22 @@ void* darray_pop(darray *self)
 int darray_size(darray *self)
 {
     return self->size;
+}
+
+void darray_insert(darray *self, void *x, int pos)
+{
+    if (pos < 0 || self->size < pos) {
+        printf("darray_insert pos %d invalid.\n", pos);
+        printf("self->size = %d\n", self->size);
+        return;
+    }
+    if (_darray_is_full(self))
+        darray_expand(self);
+    for (int i = self->size; pos < i; i--) {
+        self->data[i] = self->data[i-1];
+    }
+    (self->size)++;
+    self->data[pos] = x;
 }
 
 
